@@ -396,31 +396,9 @@
             return $place_count;
     }
 
-    public function today_transaction()
-    {
-        $sql="SELECT 
-        `TR_ID`,
-        `TR_PAID_AMOUNT`,
-        `TR_ON_DATE`,
-        `PLACE_NAME`,
-        `CUS_ID`,
-        `CUS_NAME`,
-        `CUS_PM_PH_NO`
-        FROM ".$this->transaction_table_name.",plan_master,place_master,customer_master WHERE `CUS_PLACE_ID`=place_master.PLACE_ID  AND `CUS_PLAN_ID`=plan_master.PL_ID AND  place_master.PLACE_DL_STATUS!=0 AND `TR_ON_DATE`=CURRENT_DATE AND `TR_OF_CUS`=customer_master.CUS_ID";
-        $stmt=$this->conn->prepare($sql); 
-       try{
-        $stmt->execute();
-        $single_customer_fetched=$stmt->fetchall(PDO::FETCH_ASSOC);
-       
-        return $single_customer_fetched;
-       }
-       catch(PDOException $e)
-       {
-           echo $e;
-       }
-    }
+    
 
-    public function super_transaction()
+    public function super_transaction($fromdate,$todate)
     {
         $sql="SELECT 
         `TR_ID`,
@@ -430,8 +408,11 @@
         `CUS_ID`,
         `CUS_NAME`,
         `CUS_PM_PH_NO`
-        FROM ".$this->transaction_table_name.",plan_master,place_master,customer_master WHERE `CUS_PLACE_ID`=place_master.PLACE_ID  AND `CUS_PLAN_ID`=plan_master.PL_ID AND  place_master.PLACE_DL_STATUS!=0 AND `TR_OF_CUS`=customer_master.CUS_ID";
+        FROM ".$this->transaction_table_name.",plan_master,place_master,customer_master WHERE `CUS_PLACE_ID`=place_master.PLACE_ID  AND `CUS_PLAN_ID`=plan_master.PL_ID AND  place_master.PLACE_DL_STATUS!=0 AND `TR_OF_CUS`=customer_master.CUS_ID AND `TR_ON_DATE` BETWEEN :formdate AND :todate";
+        //  var_dump($sql);
         $stmt=$this->conn->prepare($sql); 
+        $stmt->bindParam('formdate',$fromdate);
+        $stmt->bindParam('todate',$todate);
        try{
         $stmt->execute();
         $single_customer_fetched=$stmt->fetchall(PDO::FETCH_ASSOC);
