@@ -395,6 +395,29 @@
          }
             return $place_count;
     }
+    
+    
+    
+    public function super_count_by_agent()
+    {
+         //section to get a count of customer by agent
+         $sql="SELECT `AGENT_ID`,`AGENT_NAME`,`AGENT_PH_NO` FROM ".$this->Join_table_3_name." ";
+         $stmt=$this->conn->prepare($sql);
+         $stmt->execute();
+         $all_agent_fetched=$stmt->fetchall(PDO::FETCH_ASSOC);
+         $total_agent_count=count($all_agent_fetched);
+         $agent_count=[];
+         for ($i=0; $i <$total_agent_count ; $i++) { 
+          
+              $sql="SELECT COUNT(`CUS_REF_BY`) as total FROM `".$this->table_name."` WHERE `CUS_REF_BY`=".$all_agent_fetched[$i]['AGENT_ID']."";
+              $stmt=$this->conn->prepare($sql);
+              $stmt->execute();
+              $result=$stmt->fetch(PDO::FETCH_ASSOC);
+              $agent_count[$i]=$result['total'];
+              
+         }
+            return $agent_count;
+    }
 
     
 
