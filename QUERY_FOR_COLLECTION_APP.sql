@@ -128,3 +128,5 @@ CREATE TABLE transaction_master(
 	);
 
 
+-- GENRATING THE NEW ID BEFORE INSERTING 
+SELECT MAX(`CUS_ID`) FROM `customer_master` WHERE 1; 
