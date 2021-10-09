@@ -11,6 +11,7 @@
     public $cus_place_id;
     public $cus_ref_by_id;
     public $cus_pl_id;
+    public $cus_sh_id;
     public $cus_com_one;
     public $cus_com_two;
     public $cus_id;
@@ -25,6 +26,7 @@
     private $Join_table_3_name;
     private $Join_table_4_name;
     private $transaction_table_name;
+    private $Collection_master;
 
     public function __construct($db)
     {
@@ -34,6 +36,7 @@
          $this->Join_table_2_name='plan_master';
          $this->Join_table_3_name='agent_master';
          $this->Join_table_4_name='admin_login';
+         $this->Collection_master='collection_master';
          $this->transaction_table_name='transaction_master';
          $this->util=new Util();
     }
@@ -56,6 +59,8 @@
                                 {
                                     if($this->util::validate_is_empty($data->cus_pl_id))
                                     {
+                                        if($this->util::validate_is_empty($data->cus_sh_id))
+                                        {
                                             $this->cus_name=$data->cus_name;
                                             $this->cus_sur_name=$data->cus_sur_name;
                                             $this->cus_pr_ph_no=$data->cus_pm_ph_no;
@@ -63,8 +68,16 @@
                                             $this->cus_place_id=$data->cus_place_id;
                                             $this->cus_ref_by_id=$data->cus_ref_by;
                                             $this->cus_pl_id=$data->cus_pl_id;
+                                            $this->cus_sh_id=$data->cus_sh_id;
                                             $this->cus_com_one=$data->cus_com_one;
                                             return true;
+                                        }
+                                        else
+                                        {
+                                            http_response_code(200);
+                                            echo json_encode(["status"=>"0","data"=>"Choose the Customer Scheme"]);
+                                        }
+                                            
                                     }
                                     else
                                     {
@@ -233,7 +246,7 @@
     }
     public function register_customer()
     {
-        $sql="INSERT INTO ".$this->table_name."(`CUS_NAME`, `CUS_SUR_NAME`, `CUS_PM_PH_NO`, `CUS_SE_PH_NO`, `CUS_PLACE_ID`, `CUS_REF_BY`, `CUS_PLAN_ID`,`CUS_COM_ONE`) 
+        $sql="INSERT INTO ".$this->table_name."(`CUS_NAME`, `CUS_SUR_NAME`, `CUS_PM_PH_NO`, `CUS_SE_PH_NO`, `CUS_PLACE_ID`, `CUS_REF_BY`, `CUS_PLAN_ID`,`CUS_COM_ONE`,`CUS_SCHEME_ID`) 
         VALUES (
             '".$this->cus_name."',
             '".$this->cus_sur_name."',
@@ -242,11 +255,20 @@
             '".$this->cus_place_id."',
             '".$this->cus_ref_by_id."',
             '".$this->cus_pl_id."',
-            '".$this->cus_com_one."')";
-            
+            '".$this->cus_com_one."',
+            ".$this->cus_sh_id.")";    
         $stmt=$this->conn->prepare($sql);
         try{
-              return $stmt->execute()?true:false;
+                if($stmt->execute())
+                { 
+                    $sql="SELECT * FROM ".$this->Join_table_2_name."WHERE `PL_ID`=:id";
+                    $stmt=$this->conn->prepare($sql);
+                    $stmt->bindParam("id",$this->cus_pl_id);
+                    if($stmt->execute())
+                    {   
+                        $plan_amount_fetch=
+                    }
+                }
         }
         catch(PDOException $e)
         {
@@ -418,8 +440,6 @@
          }
             return $agent_count;
     }
-
-    
 
     public function super_transaction($fromdate,$todate)
     {

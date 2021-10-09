@@ -9,7 +9,7 @@ header("Content-type: application/json; charset=utf-8");
 
 // including files
 include_once("../config/database.php");
-include_once("../model/collectionmaster.php");
+include_once("../model/customer.php");
 include_once("../utility/utility.php");
 
 //objects

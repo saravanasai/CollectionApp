@@ -75,9 +75,8 @@ CREATE TABLE collection_master(
 
 -- TRIGGER
 -- INSERT INTO collection_master AFTER INSERTION ON customer_master
-INSERT INTO `collection_master`
-(`COL_FOR_CUS_ID`, `COL_TB_CUS_PL`,`CL_LAST_PAID_TO`) 
-VALUES (new.CUS_ID,NEW.CUS_PLAN_ID,1)
+INSERT INTO `collection_master` (`COL_FOR_CUS_ID`) 
+VALUES (new.CUS_ID)
 
 -- DIRECT QUERY
 DROP TRIGGER IF EXISTS `INSERT_INTO_COLLECTION_LIST`;
@@ -130,3 +129,13 @@ CREATE TABLE transaction_master(
 
 -- GENRATING THE NEW ID BEFORE INSERTING 
 SELECT MAX(`CUS_ID`) FROM `customer_master` WHERE 1; 
+
+
+-- VIEW FOR COLLECTION_LIST VIEW 
+CREATE VIEW Collection_list_view AS
+SELECT *
+FROM customer_master,place_master,plan_master,SCHEME_MASTER,collection_customer
+WHERE customer_master.CUS_ID=collection_customer.COL_OF_CUS AND 
+customer_master.CUS_PLACE_ID=place_master.PLACE_ID AND 
+customer_master.CUS_PLAN_ID=plan_master.PL_ID AND 
+collection_customer.COL_TO_SCHEME=SCHEME_MASTER.SCHEME_ID; 

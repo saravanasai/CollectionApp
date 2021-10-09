@@ -28,7 +28,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
      
    if($validation_status)
    {
-      if($customer_obj->check_customer_exist())
+      if($customer_obj->check_customer_exist()|| true)
       {
              if($customer_obj->register_customer())
              {
