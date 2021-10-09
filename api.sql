@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 29, 2021 at 09:11 AM
+-- Generation Time: Oct 09, 2021 at 02:03 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.8
 
@@ -45,22 +45,13 @@ DELIMITER ;
 --
 
 CREATE TABLE `admin_login` (
-  `ADMIN_ID` int(11) NOT NULL,
+  `ADMIN_ID` bigint(20) NOT NULL,
   `USERNAME` varchar(255) NOT NULL,
   `PHONE_NUMBER` varchar(50) NOT NULL,
   `PASSWORD` varchar(255) NOT NULL,
   `STATUS` tinyint(4) NOT NULL DEFAULT 1,
   `CREATED_AT` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `admin_login`
---
-
-INSERT INTO `admin_login` (`ADMIN_ID`, `USERNAME`, `PHONE_NUMBER`, `PASSWORD`, `STATUS`, `CREATED_AT`) VALUES
-(1, 'saravanasai', '7708454539', '0e4e946668cf2afc4299b462b812caca', 1, '2021-08-12 08:03:48'),
-(3, 'RAM', '9025807876', '0e4e946668cf2afc4299b462b812caca', 1, '2021-08-25 05:02:30'),
-(4, 'others', '545454545', '5252', 1, '2021-09-23 09:30:16');
 
 -- --------------------------------------------------------
 
@@ -69,7 +60,7 @@ INSERT INTO `admin_login` (`ADMIN_ID`, `USERNAME`, `PHONE_NUMBER`, `PASSWORD`, `
 --
 
 CREATE TABLE `agent_master` (
-  `AGENT_ID` int(11) NOT NULL,
+  `AGENT_ID` bigint(20) NOT NULL,
   `AGENT_NAME` varchar(50) DEFAULT NULL,
   `AGENT_PH_NO` varchar(25) DEFAULT NULL,
   `AGENT_LOCATION` int(11) DEFAULT NULL,
@@ -82,8 +73,8 @@ CREATE TABLE `agent_master` (
 --
 
 INSERT INTO `agent_master` (`AGENT_ID`, `AGENT_NAME`, `AGENT_PH_NO`, `AGENT_LOCATION`, `AGENT_DL_STATUS`, `AGENT_CREATED_AT`) VALUES
-(1, 'podu', '7708454539', 1, 1, '2021-08-24'),
-(2, 'podu', '7708454539', 1, 0, '2021-08-24');
+(1, 'RAKIDA RAKIDA', '7708454539', 1, 1, '2021-10-09'),
+(2, 'ADI ADI', '7708454539', 1, 1, '2021-10-09');
 
 -- --------------------------------------------------------
 
@@ -92,34 +83,20 @@ INSERT INTO `agent_master` (`AGENT_ID`, `AGENT_NAME`, `AGENT_PH_NO`, `AGENT_LOCA
 --
 
 CREATE TABLE `collection_master` (
-  `COL_ID` int(11) NOT NULL,
-  `COL_FOR_CUS_ID` int(11) DEFAULT NULL,
-  `COL_TB_CUS_PL` int(11) DEFAULT NULL,
-  `CL_FOR_MONTH_1` varchar(10) DEFAULT '0',
-  `CL_FOR_MONTH_2` varchar(10) DEFAULT '0',
-  `CL_FOR_MONTH_3` varchar(10) DEFAULT '0',
-  `CL_FOR_MONTH_4` varchar(10) DEFAULT '0',
-  `CL_FOR_MONTH_5` varchar(10) DEFAULT '0',
-  `CL_FOR_MONTH_6` varchar(10) DEFAULT '0',
-  `CL_FOR_MONTH_7` varchar(10) DEFAULT '0',
-  `CL_FOR_MONTH_8` varchar(10) DEFAULT '0',
-  `CL_FOR_MONTH_9` varchar(10) DEFAULT '0',
-  `CL_FOR_MONTH_10` varchar(10) DEFAULT '0',
-  `CL_FOR_MONTH_11` varchar(10) DEFAULT '0',
-  `CL_FOR_MONTH_12` varchar(10) DEFAULT '0',
-  `CL_BALANCE_DUE_MONTH` varchar(10) DEFAULT '11',
-  `CL_STATUS` bit(1) DEFAULT b'1' COMMENT '1 IS FOR COLLECTION IS ACTIVE 0 IS FOR COLLECTION CLOSED',
-  `CL_LAST_PAID_TO` int(11) DEFAULT 0 COMMENT 'IT ONLY SHOWS THE LAST COLLECTION DONE BY ADMIN STATUS DEFAULT IS 0',
-  `CL_CREATED_AT` date DEFAULT curdate()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `COL_ID` bigint(20) UNSIGNED NOT NULL,
+  `COL_FOR_CUS_ID` bigint(20) NOT NULL,
+  `CUS_TOTAL_DUE` bigint(20) NOT NULL COMMENT 'TOTAL AMOUNT NEED TO BE PAID BY CUSTOMER  INSERT  BY MULTIPLYING THE PLAN AMOUNT AND INSERTING HERE',
+  `COL_DUE_BALANCE` bigint(20) NOT NULL DEFAULT 0,
+  `CL_LAST_UPDATED_ON` date NOT NULL DEFAULT curdate(),
+  `CL_CREATED_ON` date DEFAULT curdate()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='TO STORE ALL THE COLLECTIONS OF THE SPECIFIC SCHEME';
 
 --
 -- Dumping data for table `collection_master`
 --
 
-INSERT INTO `collection_master` (`COL_ID`, `COL_FOR_CUS_ID`, `COL_TB_CUS_PL`, `CL_FOR_MONTH_1`, `CL_FOR_MONTH_2`, `CL_FOR_MONTH_3`, `CL_FOR_MONTH_4`, `CL_FOR_MONTH_5`, `CL_FOR_MONTH_6`, `CL_FOR_MONTH_7`, `CL_FOR_MONTH_8`, `CL_FOR_MONTH_9`, `CL_FOR_MONTH_10`, `CL_FOR_MONTH_11`, `CL_FOR_MONTH_12`, `CL_BALANCE_DUE_MONTH`, `CL_STATUS`, `CL_LAST_PAID_TO`, `CL_CREATED_AT`) VALUES
-(8, 3, 1, '100', '100', '100', '100', '100', '100', '100', '100', '100', '100', '0', '0', '1', b'1', 3, '2021-08-25'),
-(11, 6, 1, '100', '100', '100', '100', '100', '100', '100', '100', '100', '0', '0', '0', '2', b'1', 3, '2021-09-23');
+INSERT INTO `collection_master` (`COL_ID`, `COL_FOR_CUS_ID`, `CUS_TOTAL_DUE`, `COL_DUE_BALANCE`, `CL_LAST_UPDATED_ON`, `CL_CREATED_ON`) VALUES
+(2, 6, 0, 0, '2021-10-09', '2021-10-09');
 
 -- --------------------------------------------------------
 
@@ -128,38 +105,27 @@ INSERT INTO `collection_master` (`COL_ID`, `COL_FOR_CUS_ID`, `COL_TB_CUS_PL`, `C
 --
 
 CREATE TABLE `customer_master` (
-  `CUS_ID` int(11) NOT NULL,
+  `CUS_ID` bigint(20) NOT NULL,
   `CUS_NAME` varchar(50) DEFAULT NULL,
   `CUS_SUR_NAME` varchar(50) DEFAULT NULL,
   `CUS_PM_PH_NO` varchar(50) NOT NULL,
   `CUS_SE_PH_NO` varchar(50) DEFAULT NULL,
-  `CUS_PLACE_ID` int(11) NOT NULL,
-  `CUS_REF_BY` int(11) NOT NULL COMMENT 'THIS HAVE DEFAULT VALUE FROM AEGENT MASTER OF BY ADMIN ID 1 AND status WILL BE 0 		FOR THAT ROW',
-  `CUS_PLAN_ID` int(11) NOT NULL,
+  `CUS_PLACE_ID` bigint(20) NOT NULL,
+  `CUS_REF_BY` bigint(20) NOT NULL,
+  `CUS_PLAN_ID` bigint(20) NOT NULL,
   `CUS_DL_STATUS` int(11) DEFAULT 1,
   `CUS_COM_ONE` int(11) DEFAULT 0,
   `CUS_COM_TWO` int(11) DEFAULT 0,
-  `CUS_CREATED_AT` date DEFAULT curdate()
+  `CUS_CREATED_AT` date DEFAULT curdate(),
+  `CUS_SCHEME_ID` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `customer_master`
 --
 
-INSERT INTO `customer_master` (`CUS_ID`, `CUS_NAME`, `CUS_SUR_NAME`, `CUS_PM_PH_NO`, `CUS_SE_PH_NO`, `CUS_PLACE_ID`, `CUS_REF_BY`, `CUS_PLAN_ID`, `CUS_DL_STATUS`, `CUS_COM_ONE`, `CUS_COM_TWO`, `CUS_CREATED_AT`) VALUES
-(3, 'SARAVANA', 'SAI', '7708454585', '5252522525', 1, 1, 1, 1, 1, 1, '2021-08-25'),
-(4, 'SARAVANA', 'SAI', '7708458703', '5252522525', 2, 1, 1, 1, 1, 1, '2021-09-23'),
-(5, 'SARAVANA', 'SAI', '7708458701', '5252522525', 2, 1, 1, 1, 1, 1, '2021-09-23'),
-(6, 'SARAVANA', 'SAI', '7708458702', '5252522525', 2, 1, 1, 1, 1, 1, '2021-09-23');
-
---
--- Triggers `customer_master`
---
-DELIMITER $$
-CREATE TRIGGER `INSERT_INTO_COLLECTION_LIST` AFTER INSERT ON `customer_master` FOR EACH ROW INSERT INTO `collection_master` (`COL_FOR_CUS_ID`, `COL_TB_CUS_PL`,`CL_LAST_PAID_TO`) 
-VALUES (new.CUS_ID,NEW.CUS_PLAN_ID,1)
-$$
-DELIMITER ;
+INSERT INTO `customer_master` (`CUS_ID`, `CUS_NAME`, `CUS_SUR_NAME`, `CUS_PM_PH_NO`, `CUS_SE_PH_NO`, `CUS_PLACE_ID`, `CUS_REF_BY`, `CUS_PLAN_ID`, `CUS_DL_STATUS`, `CUS_COM_ONE`, `CUS_COM_TWO`, `CUS_CREATED_AT`, `CUS_SCHEME_ID`) VALUES
+(6, 'SARAVANA', 'SAI', '7708458702', '5252522525', 2, 1, 1, 1, 1, 0, '2021-10-09', 2);
 
 -- --------------------------------------------------------
 
@@ -168,7 +134,7 @@ DELIMITER ;
 --
 
 CREATE TABLE `place_master` (
-  `PLACE_ID` int(11) NOT NULL,
+  `PLACE_ID` bigint(20) NOT NULL,
   `PLACE_NAME` varchar(50) DEFAULT NULL,
   `PLACE_DL_STATUS` int(11) DEFAULT 1,
   `PLACE_CREATED_AT` date DEFAULT curdate()
@@ -179,11 +145,8 @@ CREATE TABLE `place_master` (
 --
 
 INSERT INTO `place_master` (`PLACE_ID`, `PLACE_NAME`, `PLACE_DL_STATUS`, `PLACE_CREATED_AT`) VALUES
-(1, 'k.K NAGAR', 1, '2021-08-13'),
-(2, 'THILAI NAGAR', 1, '2021-08-13'),
-(3, 'NAGAPUR', 1, '2021-08-13'),
-(4, 'AIRPORT', 1, '2021-08-13'),
-(5, 'KAJAMALAI', 1, '2021-08-13');
+(1, 'dfgdf', 1, '2021-10-09'),
+(2, 'k.k.nagar', 1, '2021-10-09');
 
 -- --------------------------------------------------------
 
@@ -192,7 +155,7 @@ INSERT INTO `place_master` (`PLACE_ID`, `PLACE_NAME`, `PLACE_DL_STATUS`, `PLACE_
 --
 
 CREATE TABLE `plan_master` (
-  `PL_ID` int(11) NOT NULL,
+  `PL_ID` bigint(20) NOT NULL,
   `PL_AMOUNT` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -201,8 +164,31 @@ CREATE TABLE `plan_master` (
 --
 
 INSERT INTO `plan_master` (`PL_ID`, `PL_AMOUNT`) VALUES
-(1, '100'),
-(2, '200');
+(1, '200'),
+(2, '300');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `scheme_master`
+--
+
+CREATE TABLE `scheme_master` (
+  `SCHEME_ID` bigint(20) NOT NULL,
+  `SCHEME_NAME` varchar(100) NOT NULL COMMENT 'NAME OF THE SCHEME THAT CAN HANDLE MULTUPLE SCHEMES FOR YEAR',
+  `SCHEME_START_DATE` date NOT NULL COMMENT 'IT SHOUDE BE THE SCHEME STARTING DATE',
+  `SCHEME_END_DATE` date DEFAULT NULL COMMENT 'IT SHOULDE BE 12 MONTHS AFTER START DATE',
+  `SCHEME_ACTIVE_STATUS` bit(1) NOT NULL DEFAULT b'1' COMMENT '1 MEANS ACTIVE 0 MEANS CLOSED',
+  `SCHEME_DL_STATUS` bit(1) DEFAULT b'1' COMMENT 'SOFT_DELETE FOR SCHEME 1 MEANS NO DELETED  MEANS DELETED'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='THIS TABLES HANDLES THE SCHEME FOR  MONTHS';
+
+--
+-- Dumping data for table `scheme_master`
+--
+
+INSERT INTO `scheme_master` (`SCHEME_ID`, `SCHEME_NAME`, `SCHEME_START_DATE`, `SCHEME_END_DATE`, `SCHEME_ACTIVE_STATUS`, `SCHEME_DL_STATUS`) VALUES
+(1, 'FIRTS SCHEME', '2021-10-12', '2021-11-12', b'1', b'1'),
+(2, 'SECOND SCHEME', '2021-10-12', '2021-11-12', b'1', b'1');
 
 -- --------------------------------------------------------
 
@@ -211,7 +197,7 @@ INSERT INTO `plan_master` (`PL_ID`, `PL_AMOUNT`) VALUES
 --
 
 CREATE TABLE `transaction_master` (
-  `TR_ID` int(11) NOT NULL,
+  `TR_ID` bigint(20) UNSIGNED NOT NULL,
   `TR_OF_CUS` int(11) DEFAULT NULL,
   `TR_OF_PL_ID` int(11) DEFAULT NULL,
   `TR_DONE_TO` int(11) DEFAULT NULL COMMENT 'TRANSACTION DONE BY ADMIN',
@@ -219,15 +205,6 @@ CREATE TABLE `transaction_master` (
   `TR_ON_DATE` date DEFAULT curdate(),
   `TR_ON_TIME` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `transaction_master`
---
-
-INSERT INTO `transaction_master` (`TR_ID`, `TR_OF_CUS`, `TR_OF_PL_ID`, `TR_DONE_TO`, `TR_PAID_AMOUNT`, `TR_ON_DATE`, `TR_ON_TIME`) VALUES
-(13, 3, 1, 3, '150', '2021-09-28', '2021-09-23 07:36:20'),
-(14, 3, 1, 3, '100', '2021-09-29', '2021-09-29 06:40:15'),
-(15, 3, 1, 3, '150', '2021-09-29', '2021-09-29 06:40:15');
 
 --
 -- Indexes for dumped tables
@@ -252,17 +229,17 @@ ALTER TABLE `agent_master`
 --
 ALTER TABLE `collection_master`
   ADD PRIMARY KEY (`COL_ID`),
-  ADD KEY `COL_FOR_CUS_ID` (`COL_FOR_CUS_ID`),
-  ADD KEY `COL_TB_CUS_PL` (`COL_TB_CUS_PL`);
+  ADD KEY `fk_collection_master` (`COL_FOR_CUS_ID`);
 
 --
 -- Indexes for table `customer_master`
 --
 ALTER TABLE `customer_master`
   ADD PRIMARY KEY (`CUS_ID`),
-  ADD KEY `CUS_PLACE_ID` (`CUS_PLACE_ID`),
-  ADD KEY `CUS_REF_BY` (`CUS_REF_BY`),
-  ADD KEY `CUS_PLAN_ID` (`CUS_PLAN_ID`);
+  ADD KEY `fk_customer_master_plan_master` (`CUS_PLAN_ID`),
+  ADD KEY `fk_customer_master` (`CUS_PLACE_ID`),
+  ADD KEY `Fk_customer_master_scheme` (`CUS_SCHEME_ID`),
+  ADD KEY `Fk_customer_master_ref_id` (`CUS_REF_BY`);
 
 --
 -- Indexes for table `place_master`
@@ -275,6 +252,12 @@ ALTER TABLE `place_master`
 --
 ALTER TABLE `plan_master`
   ADD PRIMARY KEY (`PL_ID`);
+
+--
+-- Indexes for table `scheme_master`
+--
+ALTER TABLE `scheme_master`
+  ADD PRIMARY KEY (`SCHEME_ID`);
 
 --
 -- Indexes for table `transaction_master`
@@ -290,80 +273,59 @@ ALTER TABLE `transaction_master`
 --
 
 --
--- AUTO_INCREMENT for table `admin_login`
---
-ALTER TABLE `admin_login`
-  MODIFY `ADMIN_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
 -- AUTO_INCREMENT for table `agent_master`
 --
 ALTER TABLE `agent_master`
-  MODIFY `AGENT_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `AGENT_ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `collection_master`
 --
 ALTER TABLE `collection_master`
-  MODIFY `COL_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
-
---
--- AUTO_INCREMENT for table `customer_master`
---
-ALTER TABLE `customer_master`
-  MODIFY `CUS_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `COL_ID` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `place_master`
 --
 ALTER TABLE `place_master`
-  MODIFY `PLACE_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `PLACE_ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `plan_master`
 --
 ALTER TABLE `plan_master`
-  MODIFY `PL_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `PL_ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `scheme_master`
+--
+ALTER TABLE `scheme_master`
+  MODIFY `SCHEME_ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `transaction_master`
 --
 ALTER TABLE `transaction_master`
-  MODIFY `TR_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `TR_ID` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `agent_master`
---
-ALTER TABLE `agent_master`
-  ADD CONSTRAINT `agent_master_ibfk_1` FOREIGN KEY (`AGENT_LOCATION`) REFERENCES `place_master` (`PLACE_ID`);
-
---
 -- Constraints for table `collection_master`
 --
 ALTER TABLE `collection_master`
-  ADD CONSTRAINT `collection_master_ibfk_1` FOREIGN KEY (`COL_FOR_CUS_ID`) REFERENCES `customer_master` (`CUS_ID`),
-  ADD CONSTRAINT `collection_master_ibfk_2` FOREIGN KEY (`COL_TB_CUS_PL`) REFERENCES `plan_master` (`PL_ID`),
-  ADD CONSTRAINT `collection_master_ibfk_3` FOREIGN KEY (`CL_LAST_PAID_TO`) REFERENCES `admin_login` (`ADMIN_ID`);
+  ADD CONSTRAINT `fk_collection_master` FOREIGN KEY (`COL_FOR_CUS_ID`) REFERENCES `customer_master` (`CUS_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `customer_master`
 --
 ALTER TABLE `customer_master`
-  ADD CONSTRAINT `customer_master_ibfk_1` FOREIGN KEY (`CUS_PLACE_ID`) REFERENCES `place_master` (`PLACE_ID`),
-  ADD CONSTRAINT `customer_master_ibfk_2` FOREIGN KEY (`CUS_REF_BY`) REFERENCES `agent_master` (`AGENT_ID`),
-  ADD CONSTRAINT `customer_master_ibfk_3` FOREIGN KEY (`CUS_PLAN_ID`) REFERENCES `plan_master` (`PL_ID`);
-
---
--- Constraints for table `transaction_master`
---
-ALTER TABLE `transaction_master`
-  ADD CONSTRAINT `transaction_master_ibfk_1` FOREIGN KEY (`TR_OF_CUS`) REFERENCES `customer_master` (`CUS_ID`),
-  ADD CONSTRAINT `transaction_master_ibfk_2` FOREIGN KEY (`TR_OF_PL_ID`) REFERENCES `plan_master` (`PL_ID`),
-  ADD CONSTRAINT `transaction_master_ibfk_3` FOREIGN KEY (`TR_DONE_TO`) REFERENCES `admin_login` (`ADMIN_ID`);
+  ADD CONSTRAINT `Fk_customer_master_ref_id` FOREIGN KEY (`CUS_REF_BY`) REFERENCES `agent_master` (`AGENT_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `Fk_customer_master_scheme` FOREIGN KEY (`CUS_SCHEME_ID`) REFERENCES `scheme_master` (`SCHEME_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_customer_master` FOREIGN KEY (`CUS_PLACE_ID`) REFERENCES `place_master` (`PLACE_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_customer_master_plan_master` FOREIGN KEY (`CUS_PLAN_ID`) REFERENCES `plan_master` (`PL_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
