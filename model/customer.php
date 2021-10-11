@@ -1,9 +1,9 @@
 <?php
- 
+
  include_once('../utility/utility.php');
  class Customer{
-    
-    //variables for table insertion 
+
+    //variables for table insertion
     public $cus_name;
     public $cus_sur_name;
     public $cus_pr_ph_no;
@@ -40,13 +40,13 @@
          $this->transaction_table_name='transaction_master';
          $this->util=new Util();
     }
-    
+
     //function parts
-     
+
     public function validate_user_info_feild($data)
     {
             if($this->util::validate_is_empty($data->cus_name))
-        {      
+        {
             if($this->util::validate_is_empty($data->cus_sur_name))
             {
                 if($this->util::validate_is_empty($data->cus_pm_ph_no)||true)
@@ -54,7 +54,7 @@
                     if($this->util::validate_phonenumber_length($data->cus_pm_ph_no)||true)
                     {
                             if($this->util::validate_is_empty($data->cus_place_id))
-                            {  
+                            {
                                 if($this->util::validate_is_empty($data->cus_ref_by))
                                 {
                                     if($this->util::validate_is_empty($data->cus_pl_id))
@@ -77,7 +77,7 @@
                                             http_response_code(200);
                                             echo json_encode(["status"=>"0","data"=>"Choose the Customer Scheme"]);
                                         }
-                                            
+
                                     }
                                     else
                                     {
@@ -114,7 +114,7 @@
                 http_response_code(200);
                 echo json_encode(["status"=>"0","data"=>"Customer Sur Name Feild is Empty"]);
             }
-            
+
         }
         else
         {
@@ -125,7 +125,7 @@
     public function validate_user_info_feild_on_update($data)
     {
             if($this->util::validate_is_empty($data->cus_name))
-        {      
+        {
             if($this->util::validate_is_empty($data->cus_sur_name))
             {
                 if($this->util::validate_is_empty($data->cus_pm_ph_no)||true)
@@ -133,9 +133,9 @@
                     if($this->util::validate_phonenumber_length($data->cus_pm_ph_no)||true)
                     {
                             if($this->util::validate_is_empty($data->cus_place_id))
-                            {  
-                                
-                                    
+                            {
+
+
                                             $this->cus_name=$data->cus_name;
                                             $this->cus_sur_name=$data->cus_sur_name;
                                             $this->cus_pr_ph_no=$data->cus_pm_ph_no;
@@ -145,7 +145,7 @@
                                             $this->cus_com_two=$data->cus_com_two;
                                             $this->cus_id=$data->cus_id;
                                             return true;
-                    
+
 
                             }
                             else
@@ -170,7 +170,7 @@
                 http_response_code(200);
                 echo json_encode(["status"=>"0","data"=>"Customer Sur Name Feild is Empty"]);
             }
-            
+
         }
         else
         {
@@ -195,11 +195,11 @@
     }
     public function get_all_customer()
     {
-       
+
         $sql="SELECT * FROM ".$this->table_name.",plan_master,place_master,agent_master WHERE `CUS_PLACE_ID`=place_master.PLACE_ID AND `CUS_REF_BY`= agent_master.AGENT_ID AND `CUS_PLAN_ID`=plan_master.PL_ID; ";
         $stmt=$this->conn->prepare($sql);
-       
-         
+
+
         try{
          $stmt->execute();
          $all_agents_fetched=$stmt->fetchall(PDO::FETCH_ASSOC);
@@ -210,19 +210,19 @@
             echo $e;
         }
 
-    }   
+    }
     public function get_single_customer()
     {
-       
+
         $sql="SELECT *
          FROM ".$this->table_name.",plan_master,place_master,agent_master,collection_master WHERE `CUS_PLACE_ID`=place_master.PLACE_ID AND `CUS_REF_BY`= agent_master.AGENT_ID AND `CUS_PLAN_ID`=plan_master.PL_ID AND `CUS_ID`=:id AND `COL_FOR_CUS_ID`=:id";
         $stmt=$this->conn->prepare($sql);
         $stmt->bindParam('id',$this->cus_id);
-         
+
         try{
          $stmt->execute();
          $single_customer_fetched=$stmt->fetchall(PDO::FETCH_ASSOC);
-        
+
          return $single_customer_fetched;
         }
         catch(PDOException $e)
@@ -230,12 +230,12 @@
             echo $e;
         }
 
-    }   
+    }
     public function searchCustomer($data)
     {
         $sql = "SELECT * FROM " . $this->table_name ." WHERE `CUS_NAME` like '%" . $data . "%' OR `CUS_PM_PH_NO` like '%" . $data . "%' OR `CUS_ID` like '%".$data."%'";
         $stmt = $this->conn->prepare($sql);
-        
+
         try {
             $stmt->execute();
             $customer_fetched = $stmt->fetchall(PDO::FETCH_ASSOC);
@@ -246,7 +246,7 @@
     }
     public function register_customer()
     {
-        $sql="INSERT INTO ".$this->table_name."(`CUS_NAME`, `CUS_SUR_NAME`, `CUS_PM_PH_NO`, `CUS_SE_PH_NO`, `CUS_PLACE_ID`, `CUS_REF_BY`, `CUS_PLAN_ID`,`CUS_COM_ONE`,`CUS_SCHEME_ID`) 
+        $sql="INSERT INTO ".$this->table_name."(`CUS_NAME`, `CUS_SUR_NAME`, `CUS_PM_PH_NO`, `CUS_SE_PH_NO`, `CUS_PLACE_ID`, `CUS_REF_BY`, `CUS_PLAN_ID`,`CUS_COM_ONE`,`CUS_SCHEME_ID`)
         VALUES (
             '".$this->cus_name."',
             '".$this->cus_sur_name."',
@@ -256,17 +256,33 @@
             '".$this->cus_ref_by_id."',
             '".$this->cus_pl_id."',
             '".$this->cus_com_one."',
-            ".$this->cus_sh_id.")";    
+            ".$this->cus_sh_id.")";
         $stmt=$this->conn->prepare($sql);
+
         try{
                 if($stmt->execute())
-                { 
-                    $sql="SELECT * FROM ".$this->Join_table_2_name."WHERE `PL_ID`=:id";
+                {
+                    $last_id = $this->conn->lastInsertId();
+
+                    $sql="SELECT * FROM ".$this->Join_table_2_name." WHERE `PL_ID`=:id";
                     $stmt=$this->conn->prepare($sql);
                     $stmt->bindParam("id",$this->cus_pl_id);
+
                     if($stmt->execute())
-                    {   
-                        $plan_amount_fetch=
+                    {
+                        $plan_amount_fetch=$stmt->fetchall(PDO::FETCH_ASSOC);
+
+                        $planAmount = (number_format($plan_amount_fetch[0]['PL_AMOUNT'])) * 12;
+
+                        $sql = "INSERT INTO `collection_master`(`COL_FOR_CUS_ID`, `CUS_TOTAL_DUE`, `COL_DUE_BALANCE`)
+                        VALUES (
+                            '".$last_id."',
+                            '".$planAmount."',
+                            '".$planAmount."')";
+                        $stmt=$this->conn->prepare($sql);
+                        if($stmt->execute()){
+                            return true;
+                        }
                     }
                 }
         }
@@ -279,13 +295,13 @@
     {
 
         $sql="SELECT * FROM ".$this->table_name." WHERE  CUS_ID='".$this->cus_id."'";
-       
+
         $stmt=$this->conn->prepare($sql);
        try{
                $stmt->execute();
                $response=$stmt->fetchall(PDO::FETCH_ASSOC);
                return (count($response)>0)?true:false;
-               
+
         }
         catch(PDOException $e)
         {
@@ -294,8 +310,8 @@
     }
     public function update_customer()
     {
-        $sql="UPDATE ".$this->table_name." 
-         SET 
+        $sql="UPDATE ".$this->table_name."
+         SET
         `CUS_NAME`=:cus_name,
         `CUS_SUR_NAME`=:cus_sur_name,
         `CUS_PM_PH_NO`=:cus_ph_no,
@@ -312,8 +328,8 @@
         $stmt->bindParam('cus_com_one',$this->cus_com_one);
         $stmt->bindParam('cus_com_two',$this->cus_com_two);
         $stmt->bindParam('id',$this->cus_id);
-       
-         
+
+
         try{
               return $stmt->execute()?true:false;
         }
@@ -331,11 +347,11 @@
         FROM ".$this->transaction_table_name.",plan_master,place_master,admin_login,customer_master WHERE `CUS_PLACE_ID`=place_master.PLACE_ID AND `TR_DONE_TO`= admin_login.ADMIN_ID  AND `CUS_PLAN_ID`=plan_master.PL_ID AND `TR_OF_CUS`=:id";
        $stmt=$this->conn->prepare($sql);
        $stmt->bindParam('id',$this->cus_id);
-        
+
        try{
         $stmt->execute();
         $single_customer_fetched=$stmt->fetchall(PDO::FETCH_ASSOC);
-       
+
         return $single_customer_fetched;
        }
        catch(PDOException $e)
@@ -347,16 +363,16 @@
     public function update_complement($com_1,$com_2)
     {
 
-        $sql="UPDATE ".$this->table_name." 
-         SET 
+        $sql="UPDATE ".$this->table_name."
+         SET
         `CUS_COM_ONE`=:cus_com_one,
         `CUS_COM_TWO`=:cus_com_two WHERE `CUS_ID`=:id";
         $stmt=$this->conn->prepare($sql);
         $stmt->bindParam('cus_com_one',$com_1);
         $stmt->bindParam('cus_com_two',$com_2);
         $stmt->bindParam('id',$this->cus_id);
-       
-         
+
+
         try{
               return $stmt->execute()?true:false;
         }
@@ -373,26 +389,26 @@
         $sql="UPDATE `customer_master` SET `CUS_COM_TWO`='1' WHERE 1";
         $stmt=$this->conn->prepare($sql);
         return $stmt->execute()?true:false;
-         
+
     }
-    
+
     public function super_count_by_plan()
     {
-         //section to get a count of customer by plan 
+         //section to get a count of customer by plan
         $sql="SELECT `PL_ID`,`PL_AMOUNT` FROM ".$this->Join_table_2_name." ";
         $stmt=$this->conn->prepare($sql);
         $stmt->execute();
         $all_plans_fetched=$stmt->fetchall(PDO::FETCH_ASSOC);
         $total_plan_count=count($all_plans_fetched);
         $plan_count=[];
-        for ($i=0; $i <$total_plan_count ; $i++) { 
-         
+        for ($i=0; $i <$total_plan_count ; $i++) {
+
              $sql="SELECT COUNT(`CUS_PLAN_ID`) as total FROM `".$this->table_name."` WHERE `CUS_PLAN_ID`=".$all_plans_fetched[$i]['PL_ID']."";
              $stmt=$this->conn->prepare($sql);
              $stmt->execute();
              $result=$stmt->fetch(PDO::FETCH_ASSOC);
              $plan_count[$i]=$result['total'];
-             
+
         }
            return $plan_count;
     }
@@ -406,20 +422,20 @@
          $all_places_fetched=$stmt->fetchall(PDO::FETCH_ASSOC);
          $total_place_count=count($all_places_fetched);
          $place_count=[];
-         for ($i=0; $i <$total_place_count ; $i++) { 
-          
+         for ($i=0; $i <$total_place_count ; $i++) {
+
               $sql="SELECT COUNT(`CUS_PLACE_ID`) as total FROM `".$this->table_name."` WHERE `CUS_PLACE_ID`=".$all_places_fetched[$i]['PLACE_ID']."";
               $stmt=$this->conn->prepare($sql);
               $stmt->execute();
               $result=$stmt->fetch(PDO::FETCH_ASSOC);
               $place_count[$i]=$result['total'];
-              
+
          }
             return $place_count;
     }
-    
-    
-    
+
+
+
     public function super_count_by_agent()
     {
          //section to get a count of customer by agent
@@ -429,21 +445,21 @@
          $all_agent_fetched=$stmt->fetchall(PDO::FETCH_ASSOC);
          $total_agent_count=count($all_agent_fetched);
          $agent_count=[];
-         for ($i=0; $i <$total_agent_count ; $i++) { 
-          
+         for ($i=0; $i <$total_agent_count ; $i++) {
+
               $sql="SELECT COUNT(`CUS_REF_BY`) as total FROM `".$this->table_name."` WHERE `CUS_REF_BY`=".$all_agent_fetched[$i]['AGENT_ID']."";
               $stmt=$this->conn->prepare($sql);
               $stmt->execute();
               $result=$stmt->fetch(PDO::FETCH_ASSOC);
               $agent_count[$i]=$result['total'];
-              
+
          }
             return $agent_count;
     }
 
     public function super_transaction($fromdate,$todate)
     {
-        $sql="SELECT 
+        $sql="SELECT
         `TR_ID`,
         `TR_PAID_AMOUNT`,
         `TR_ON_DATE`,
@@ -453,7 +469,7 @@
         `CUS_PM_PH_NO`
         FROM ".$this->transaction_table_name.",plan_master,place_master,customer_master WHERE `CUS_PLACE_ID`=place_master.PLACE_ID  AND `CUS_PLAN_ID`=plan_master.PL_ID AND  place_master.PLACE_DL_STATUS!=0 AND `TR_OF_CUS`=customer_master.CUS_ID AND `TR_ON_DATE` BETWEEN :formdate AND :todate";
         //  var_dump($sql);
-        $stmt=$this->conn->prepare($sql); 
+        $stmt=$this->conn->prepare($sql);
         $stmt->bindParam('formdate',$fromdate);
         $stmt->bindParam('todate',$todate);
        try{

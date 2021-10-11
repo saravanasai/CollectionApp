@@ -1,8 +1,8 @@
 <?php
- 
+
  class Database{
 
-     
+
    private $servername;
    private $dbname;
    private $username;
@@ -11,7 +11,7 @@
         public function Connect()
           {
             $this->servername='localhost';
-            $this->dbname='api';
+            $this->dbname='collect';
             $this->username='root';
             $this->password='';
             try {
@@ -27,7 +27,7 @@
           }
 
   }
-     
- 
+
+
 
  ?>

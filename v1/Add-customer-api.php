@@ -23,9 +23,9 @@ $util = new Util();
 if($_SERVER['REQUEST_METHOD'] === "POST"){
 
    $data = json_decode(file_get_contents("php://input"));
-    
+
    $validation_status=$customer_obj->validate_user_info_feild($data);
-     
+
    if($validation_status)
    {
       if($customer_obj->check_customer_exist()|| true)
@@ -47,8 +47,8 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
         echo json_encode(["status"=>"0","data"=>"User Already Exist"]);
       }
    }
-  
-  
+
+
 }
 else
 {

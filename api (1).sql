@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 09, 2021 at 02:03 PM
+-- Generation Time: Oct 11, 2021 at 08:40 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.8
 
@@ -52,6 +52,13 @@ CREATE TABLE `admin_login` (
   `STATUS` tinyint(4) NOT NULL DEFAULT 1,
   `CREATED_AT` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `admin_login`
+--
+
+INSERT INTO `admin_login` (`ADMIN_ID`, `USERNAME`, `PHONE_NUMBER`, `PASSWORD`, `STATUS`, `CREATED_AT`) VALUES
+(1, 'admin', '7708454539', '$2y$10$voM15Z6Q88Py7thlAwkDmeWdS9UpalCQ/NhxXVfuZr4oLDgG.WtAG', 1, '2021-10-11 06:40:26');
 
 -- --------------------------------------------------------
 
@@ -229,7 +236,7 @@ ALTER TABLE `agent_master`
 --
 ALTER TABLE `collection_master`
   ADD PRIMARY KEY (`COL_ID`),
-  ADD KEY `fk_collection_master` (`COL_FOR_CUS_ID`);
+  ADD KEY `Fk_collection_master_cusid` (`COL_FOR_CUS_ID`);
 
 --
 -- Indexes for table `customer_master`
@@ -273,6 +280,12 @@ ALTER TABLE `transaction_master`
 --
 
 --
+-- AUTO_INCREMENT for table `admin_login`
+--
+ALTER TABLE `admin_login`
+  MODIFY `ADMIN_ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `agent_master`
 --
 ALTER TABLE `agent_master`
@@ -283,6 +296,12 @@ ALTER TABLE `agent_master`
 --
 ALTER TABLE `collection_master`
   MODIFY `COL_ID` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `customer_master`
+--
+ALTER TABLE `customer_master`
+  MODIFY `CUS_ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `place_master`
@@ -316,7 +335,7 @@ ALTER TABLE `transaction_master`
 -- Constraints for table `collection_master`
 --
 ALTER TABLE `collection_master`
-  ADD CONSTRAINT `fk_collection_master` FOREIGN KEY (`COL_FOR_CUS_ID`) REFERENCES `customer_master` (`CUS_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `Fk_collection_master_cusid` FOREIGN KEY (`COL_FOR_CUS_ID`) REFERENCES `customer_master` (`CUS_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `customer_master`
