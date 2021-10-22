@@ -19,7 +19,7 @@ $connection = $db->Connect();
 $customer_obj = new Customer($connection);
 $util=new Util();
 
-if($_SERVER['REQUEST_METHOD'] === "GET"){
+if($_SERVER['REQUEST_METHOD'] === "POST"){
 
     $from_date=$_GET['fromdate'];
     $to_date=$_GET['todate'];
@@ -45,10 +45,10 @@ if($_SERVER['REQUEST_METHOD'] === "GET"){
         echo json_encode(["status"=>"0","data"=>"From Date is Empty"]);
 
       }
-    
-    
-  
-  
+
+
+
+
 }
 else
 {
