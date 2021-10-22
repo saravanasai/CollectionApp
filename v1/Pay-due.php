@@ -9,7 +9,7 @@ header("Content-type: application/json; charset=utf-8");
 
 // including files
 include_once("../config/database.php");
-include_once("../model/customer.php");
+include_once("../model/collectionmaster.php");
 include_once("../utility/utility.php");
 
 //objects
@@ -24,10 +24,11 @@ $util=new Util();
 if($_SERVER['REQUEST_METHOD'] === "POST"){
 
    $data = json_decode(file_get_contents("php://input"));
-    
+
    $collection_obj->by_admin=$data->BY_ADMIN;
-   $pay=$collection_obj->pay_due($data->CUS_ID,$data->DUE_PAYED);
-    
+   
+   $pay=$collection_obj->pay_due($data->CUS_ID,$data->DUE_PAYED,$data->BY_ADMIN);
+
       if($pay)
       {
         http_response_code(200);
@@ -35,11 +36,15 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
       }
       else
       {
-        http_response_code(500);
-        echo json_encode(["status"=>"0","data"=>"Something went Wrong"]);
+        if($pay == false){
+          echo json_encode(["status"=>"0","data"=>"You Have No Plan"]);
+        }else{
+          http_response_code(500);
+          echo json_encode(["status"=>"0","data"=>"Something went Wrong"]);
+        }
       }
-      
-       
+
+
 }
 else
 {
