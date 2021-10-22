@@ -47,7 +47,7 @@
     {
             if($this->util::validate_is_empty($data->cus_name))
         {
-            if($this->util::validate_is_empty($data->cus_sur_name))
+            if($this->util::validate_is_empty($data->cus_sur_name) || true)
             {
                 if($this->util::validate_is_empty($data->cus_pm_ph_no)||true)
                 {
@@ -341,12 +341,14 @@
     }
     public function get_single_customer_transaction()
     {
-        $sql="SELECT `CUS_NAME`,`CUS_SUR_NAME`,`CUS_PM_PH_NO`,
+        $sql="SELECT `CUS_ID`,`CUS_NAME`,`CUS_SUR_NAME`,`CUS_PM_PH_NO`,
         `CUS_PLACE_ID`,
         `PL_AMOUNT`,`PLACE_NAME`,`USERNAME` AS TO_ADMIN ,`TR_ON_DATE`,`TR_ON_TIME`
-        FROM ".$this->transaction_table_name.",plan_master,place_master,admin_login,customer_master WHERE `CUS_PLACE_ID`=place_master.PLACE_ID AND `TR_DONE_TO`= admin_login.ADMIN_ID  AND `CUS_PLAN_ID`=plan_master.PL_ID AND `TR_OF_CUS`=:id";
+        FROM ".$this->transaction_table_name.",plan_master,place_master,admin_login,customer_master WHERE `CUS_PLACE_ID`=place_master.PLACE_ID AND `TR_DONE_TO`= admin_login.ADMIN_ID  AND `CUS_PLAN_ID`=plan_master.PL_ID AND `TR_OF_CUS`=:id  AND transaction_master.TR_OF_CUS=customer_master.CUS_ID";
        $stmt=$this->conn->prepare($sql);
        $stmt->bindParam('id',$this->cus_id);
+
+
 
        try{
         $stmt->execute();

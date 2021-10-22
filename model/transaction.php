@@ -32,6 +32,7 @@ class transaction_list
 
     public function transaction_edit($tr_id,$cus_id, $amount_edit)
     {
+
         $sql = "UPDATE ".$this->table_name." SET `TR_PAID_AMOUNT`='$amount_edit' WHERE TR_ID = '$tr_id' AND TR_OF_CUS = '$cus_id'";
         $stmt = $this->conn->prepare($sql);
 

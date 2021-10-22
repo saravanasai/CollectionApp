@@ -26,6 +26,8 @@ if($_SERVER['REQUEST_METHOD'] === "GET"){
          $customer_obj->cus_id=$data;
       if($customer_obj->check_customer_exist_by_cus_id())
       {
+
+          // $customer_obj->cus_id = $data->cus_id;
              $response=$customer_obj->get_single_customer_transaction();
              $response_data=array();
              foreach($response as $key=>$customer)
@@ -39,9 +41,9 @@ if($_SERVER['REQUEST_METHOD'] === "GET"){
         http_response_code(200);
         echo json_encode(["status"=>"0","data"=>"User ID Does Not Matchs"]);
       }
-   
-  
-  
+
+
+
 }
 else
 {

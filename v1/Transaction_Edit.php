@@ -24,6 +24,12 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
 
     $data = json_decode(file_get_contents("php://input"));
 
+    if( empty($data->TR_ID) || empty($data->CUS_ID) || empty($data->TRANS_AMOUNT)){
+      http_response_code(500);
+      echo json_encode(["status"=>"0","data"=>"Invalid Inputs"]);
+      exit;
+    }
+
     $trans_edit=$trans_obj->transaction_edit($data->TR_ID,$data->CUS_ID,$data->TRANS_AMOUNT);
 
     if($trans_edit){
@@ -31,7 +37,7 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
       echo json_encode(["status"=>"1","data"=>"Transactions is Updated"]);
     }else{
       http_response_code(500);
-      echo json_encode(["status"=>"1","data"=>"Update Error"]);
+      echo json_encode(["status"=>"0","data"=>"Update Error"]);
     }
 
  }
