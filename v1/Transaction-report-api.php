@@ -53,5 +53,5 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
 else
 {
     http_response_code(403);
-    echo json_encode(["status"=>"0","data"=>"This Api Supports Only Get Methode"]);
+    echo json_encode(["status"=>"0","data"=>"This Api Supports Only POST Method"]);
 }
