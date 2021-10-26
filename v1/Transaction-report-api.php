@@ -21,8 +21,9 @@ $util=new Util();
 
 if($_SERVER['REQUEST_METHOD'] === "POST"){
 
-    $from_date=$_GET['fromdate'];
-    $to_date=$_GET['todate'];
+    $data = json_decode(file_get_contents("php://input"));
+    $from_date=$data->fromdate;
+    $to_date=$data->todate;
 
       //validating the feilds or not null
       if($util->validate_is_empty($from_date))
@@ -53,5 +54,5 @@ if($_SERVER['REQUEST_METHOD'] === "POST"){
 else
 {
     http_response_code(403);
-    echo json_encode(["status"=>"0","data"=>"This Api Supports Only Get Methode"]);
+    echo json_encode(["status"=>"0","data"=>"This Api Supports Only POST Methode"]);
 }
