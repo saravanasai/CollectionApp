@@ -341,10 +341,10 @@
     }
     public function get_single_customer_transaction()
     {
-        $sql="SELECT `CUS_NAME`,`CUS_SUR_NAME`,`CUS_PM_PH_NO`,
+        $sql="SELECT `CUS_ID`,`CUS_NAME`,`CUS_SUR_NAME`,`CUS_PM_PH_NO`,
         `CUS_PLACE_ID`,
-        `PL_AMOUNT`,`PLACE_NAME`,`USERNAME` AS TO_ADMIN ,`TR_ON_DATE`,`TR_ON_TIME`
-        FROM ".$this->transaction_table_name.",plan_master,place_master,admin_login,customer_master WHERE `CUS_PLACE_ID`=place_master.PLACE_ID AND `TR_DONE_TO`= admin_login.ADMIN_ID  AND `CUS_PLAN_ID`=plan_master.PL_ID AND `TR_OF_CUS`=:id";
+        `PL_AMOUNT`,`PLACE_NAME`,`TR_PAID_AMOUNT`,`TR_ON_DATE`,`TR_ON_TIME`,`USERNAME` AS TO_ADMIN
+        FROM ".$this->transaction_table_name.",plan_master,place_master,admin_login,customer_master WHERE `CUS_PLACE_ID`=place_master.PLACE_ID AND `TR_DONE_TO`= admin_login.ADMIN_ID  AND `CUS_PLAN_ID`=plan_master.PL_ID AND `TR_OF_CUS`=:id  AND transaction_master.TR_OF_CUS=customer_master.CUS_ID";
        $stmt=$this->conn->prepare($sql);
        $stmt->bindParam('id',$this->cus_id);
 
