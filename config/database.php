@@ -11,7 +11,7 @@
         public function Connect()
           {
             $this->servername='localhost';
-            $this->dbname='collect';
+            $this->dbname='api';
             $this->username='root';
             $this->password='';
             try {

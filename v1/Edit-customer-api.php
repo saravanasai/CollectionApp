@@ -8,7 +8,7 @@ header("Access-Control-Allow-Methods: POST");
 header("Content-type: application/json; charset=utf-8");
 
 // including files
-include_once("../../config/database.php");
+include_once("../config/database.php");
 include_once("../model/customer.php");
 include_once("../utility/utility.php");
 
