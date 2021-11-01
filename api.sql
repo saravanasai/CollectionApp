@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 11, 2021 at 08:40 AM
+-- Generation Time: Nov 01, 2021 at 09:24 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.8
 
@@ -32,8 +32,7 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `super_collection_list` ()  BEGIN 
    SELECT * FROM customer_master,plan_master,collection_master WHERE 
-   collection_master.COL_FOR_CUS_ID=customer_master.CUS_ID
-   AND collection_master.COL_TB_CUS_PL=plan_master.PL_ID;
+   collection_master.COL_FOR_CUS_ID=customer_master.CUS_ID;
 END$$
 
 DELIMITER ;
@@ -94,16 +93,18 @@ CREATE TABLE `collection_master` (
   `COL_FOR_CUS_ID` bigint(20) NOT NULL,
   `CUS_TOTAL_DUE` bigint(20) NOT NULL COMMENT 'TOTAL AMOUNT NEED TO BE PAID BY CUSTOMER  INSERT  BY MULTIPLYING THE PLAN AMOUNT AND INSERTING HERE',
   `COL_DUE_BALANCE` bigint(20) NOT NULL DEFAULT 0,
+  `COL_DUE_LAST_BALANCE` bigint(20) NOT NULL DEFAULT 0 COMMENT 'IT SHOWS THE RECORD OF LAST BALANCE BEFORE NEXT NEW',
   `CL_LAST_UPDATED_ON` date NOT NULL DEFAULT curdate(),
   `CL_CREATED_ON` date DEFAULT curdate()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='TO STORE ALL THE COLLECTIONS OF THE SPECIFIC SCHEME';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `collection_master`
 --
 
-INSERT INTO `collection_master` (`COL_ID`, `COL_FOR_CUS_ID`, `CUS_TOTAL_DUE`, `COL_DUE_BALANCE`, `CL_LAST_UPDATED_ON`, `CL_CREATED_ON`) VALUES
-(2, 6, 0, 0, '2021-10-09', '2021-10-09');
+INSERT INTO `collection_master` (`COL_ID`, `COL_FOR_CUS_ID`, `CUS_TOTAL_DUE`, `COL_DUE_BALANCE`, `COL_DUE_LAST_BALANCE`, `CL_LAST_UPDATED_ON`, `CL_CREATED_ON`) VALUES
+(1, 17, 2400, 1650, 1900, '2021-11-01', '2021-11-01'),
+(2, 18, 2400, 2200, 2300, '2021-11-01', '2021-11-01');
 
 -- --------------------------------------------------------
 
@@ -132,7 +133,8 @@ CREATE TABLE `customer_master` (
 --
 
 INSERT INTO `customer_master` (`CUS_ID`, `CUS_NAME`, `CUS_SUR_NAME`, `CUS_PM_PH_NO`, `CUS_SE_PH_NO`, `CUS_PLACE_ID`, `CUS_REF_BY`, `CUS_PLAN_ID`, `CUS_DL_STATUS`, `CUS_COM_ONE`, `CUS_COM_TWO`, `CUS_CREATED_AT`, `CUS_SCHEME_ID`) VALUES
-(6, 'SARAVANA', 'SAI', '7708458702', '5252522525', 2, 1, 1, 1, 1, 0, '2021-10-09', 2);
+(17, 'RAGUL', 'SAI', '7708458701', '5252522525', 2, 1, 1, 1, 1, 0, '2021-11-01', 1),
+(18, 'KOWSI', 'SAI', '7708458701', '5252522525', 2, 1, 1, 1, 1, 0, '2021-11-01', 1);
 
 -- --------------------------------------------------------
 
@@ -214,6 +216,17 @@ CREATE TABLE `transaction_master` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Dumping data for table `transaction_master`
+--
+
+INSERT INTO `transaction_master` (`TR_ID`, `TR_OF_CUS`, `TR_OF_PL_ID`, `TR_DONE_TO`, `TR_PAID_AMOUNT`, `TR_ON_DATE`, `TR_ON_TIME`) VALUES
+(1, 17, NULL, 1, '250', '2021-11-01', '2021-11-01 07:50:33'),
+(2, 17, NULL, 1, '200', '2021-11-01', '2021-11-01 07:54:34'),
+(3, 17, NULL, 1, '200', '2021-11-01', '2021-11-01 07:57:30'),
+(4, 18, NULL, 1, '100', '2021-11-01', '2021-11-01 08:19:39'),
+(5, 18, NULL, 1, '200', '2021-11-01', '2021-11-01 08:20:33');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -235,8 +248,7 @@ ALTER TABLE `agent_master`
 -- Indexes for table `collection_master`
 --
 ALTER TABLE `collection_master`
-  ADD PRIMARY KEY (`COL_ID`),
-  ADD KEY `Fk_collection_master_cusid` (`COL_FOR_CUS_ID`);
+  ADD PRIMARY KEY (`COL_ID`);
 
 --
 -- Indexes for table `customer_master`
@@ -301,7 +313,7 @@ ALTER TABLE `collection_master`
 -- AUTO_INCREMENT for table `customer_master`
 --
 ALTER TABLE `customer_master`
-  MODIFY `CUS_ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `CUS_ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `place_master`
@@ -313,7 +325,7 @@ ALTER TABLE `place_master`
 -- AUTO_INCREMENT for table `plan_master`
 --
 ALTER TABLE `plan_master`
-  MODIFY `PL_ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `PL_ID` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `scheme_master`
@@ -325,17 +337,11 @@ ALTER TABLE `scheme_master`
 -- AUTO_INCREMENT for table `transaction_master`
 --
 ALTER TABLE `transaction_master`
-  MODIFY `TR_ID` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `TR_ID` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `collection_master`
---
-ALTER TABLE `collection_master`
-  ADD CONSTRAINT `Fk_collection_master_cusid` FOREIGN KEY (`COL_FOR_CUS_ID`) REFERENCES `customer_master` (`CUS_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `customer_master`

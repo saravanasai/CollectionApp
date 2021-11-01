@@ -74,8 +74,9 @@ class collection_list
                return false;
             }
             // Updating Due Amount
+            $amount_last_balance=$collect_data[0]['COL_DUE_BALANCE'];
             $payAmount = $collect_data[0]['COL_DUE_BALANCE'] - $amount_paid;
-            $sql="UPDATE `collection_master` SET `COL_DUE_BALANCE`=".$payAmount." WHERE `COL_FOR_CUS_ID`=".$cus_id;
+            $sql="UPDATE `collection_master` SET `COL_DUE_BALANCE`=".$payAmount.",`COL_DUE_LAST_BALANCE`=".$amount_last_balance." WHERE `COL_FOR_CUS_ID`=".$cus_id;
             $stmt = $this->conn->prepare($sql);
 
             if ($stmt->execute()) {
@@ -90,7 +91,7 @@ class collection_list
             }
          }
          else{
-            return false;
+            return false; //cannot pay because payed full amount
          }
 
       }

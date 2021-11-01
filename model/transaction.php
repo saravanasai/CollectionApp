@@ -31,15 +31,36 @@ class transaction_list
     }
 
     public function transaction_edit($tr_id,$cus_id, $amount_edit)
-    {
-        $sql = "UPDATE ".$this->table_name." SET `TR_PAID_AMOUNT`='$amount_edit' WHERE TR_ID = '$tr_id' AND TR_OF_CUS = '$cus_id'";
-        $stmt = $this->conn->prepare($sql);
+    { 
 
-        if($stmt->execute()){
-            return true;
-        }else{
-            return false;
+        //updating the new value to collection master is transaction is edited
+        $sql="SELECT * FROM `collection_master` WHERE `COL_FOR_CUS_ID`=:id";
+        $stmt=$this->conn->prepare($sql);
+        $stmt->bindParam('id',$cus_id);
+        if($stmt->execute())
+        {
+            $collection_list_fetch=$stmt->fetchall(PDO::FETCH_ASSOC);
+
+            $collection_last_amount_paid=$collection_list_fetch[0]['COL_DUE_LAST_BALANCE'];
+            $due_balance_after_edit=$collection_last_amount_paid-$amount_edit;
+            $sql="UPDATE `collection_master` SET `COL_DUE_BALANCE`=".$due_balance_after_edit." WHERE `COL_FOR_CUS_ID`=".$cus_id;
+            $stmt = $this->conn->prepare($sql);
+
+            if ($stmt->execute()) {
+            //    Updating Transction
+               $sql = "UPDATE ".$this->table_name." SET `TR_PAID_AMOUNT`=".$amount_edit." WHERE TR_ID = ".$tr_id." AND TR_OF_CUS = ".$cus_id."";
+                // var_dump($sql);
+                $stmt = $this->conn->prepare($sql);
+
+                if($stmt->execute()){
+                    return true;
+                }else{
+                    return false;
+                }
+                    }
         }
+
+        
 
     }
 }
