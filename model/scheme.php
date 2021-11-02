@@ -19,6 +19,22 @@ class scheme{
          $this->table_name='scheme_master';
     }
     
+     public function get_all_scheme()
+    {
+        $sql="SELECT * FROM ".$this->table_name." WHERE 1";
+        $stmt=$this->conn->prepare($sql);
+        try{
+         $stmt->execute();
+         $all_scheme_fetched=$stmt->fetchall(PDO::FETCH_ASSOC);
+         return $all_scheme_fetched;
+        }
+        catch(PDOException $e)
+        {
+            echo $e;
+        }
+
+    }
+    
     public function register_scheme()
     {
          
