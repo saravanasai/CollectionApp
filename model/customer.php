@@ -391,6 +391,35 @@
         return $stmt->execute()?true:false;
 
     }
+    
+    public function super_complement_update_multiple(array $array)
+    {
+         
+          $list='';
+
+         for ($i=0,$length=count($array); $i < $length ; $i++) { 
+             
+            if($i===0)
+            {
+                $list.=$array[$i];
+            }
+            elseif ($i===$length) {
+
+                $list.=$array[$i];
+            }
+            else {
+                $list.=",".$array[$i];
+            }
+
+         }
+        
+        
+        $sql="UPDATE `customer_master` SET `CUS_COM_TWO`='1' WHERE `CUS_ID` IN ({$list})";
+        $stmt=$this->conn->prepare($sql);
+        return $stmt->execute()?true:false;
+
+    }
+     
 
     public function super_count_by_plan()
     {
